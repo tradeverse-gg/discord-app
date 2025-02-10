@@ -16,9 +16,13 @@ export abstract class AbstractDefaultButtonConsumer
 
     public async onInteraction(interaction: Interaction): Promise<void> {
         if (interaction.isButton() && interaction.customId) {
-            const payload: ComponentPayload = JSON.parse(interaction.customId);
+            try {
+                const payload: ComponentPayload = JSON.parse(interaction.customId);
 
-            if (payload.cmd === this.slashCommandName) await this.onButtonExecution(interaction, payload);
+                if (payload.cmd === this.slashCommandName) await this.onButtonExecution(interaction, payload);
+            } catch (error) {
+                this.consoleLogger.error(`Error in ${this.name} onInteraction:`, error);
+            }
         }
     }
 
