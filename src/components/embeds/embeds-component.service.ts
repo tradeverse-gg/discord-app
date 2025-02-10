@@ -44,7 +44,7 @@ export class EmbedsComponentsService extends AbstractDefaultService {
             embed.setAuthor(input.author);
         } else {
             embed.setAuthor({
-                name: 'Koino',
+                name: 'Tradeverse',
             });
         }
 
