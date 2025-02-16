@@ -1,7 +1,7 @@
-import { AbstractDefaultService } from '@/core/abstract/service/default.service.abstract';
+import { AbstractDefaultService } from '#core/abstract/service/default.service.abstract';
 
 export abstract class AbstractDefaultConsumer extends AbstractDefaultService {
-    constructor(protected readonly name: string) {
-        super(name);
-    }
+	constructor(protected readonly name: string) {
+		super(name);
+	}
 }

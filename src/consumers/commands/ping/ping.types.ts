@@ -1,8 +1,8 @@
 export enum PingAction {
-    Refresh,
+	Refresh,
 }
 
 export interface PingButtonProps {
-    action: PingAction;
-    updatedAt: Date | number;
+	action: PingAction;
+	updatedAt: Date | number;
 }

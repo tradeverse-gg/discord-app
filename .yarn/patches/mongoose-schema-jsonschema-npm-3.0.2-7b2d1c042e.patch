@@ -1,0 +1,46 @@
+diff --git a/lib/schema.js b/lib/schema.js
+index 1abbe04749b94632706ced26ffa5db138893f2c4..f5e0bdc05dcecf425cbd8ba62e9e339fb3eef195 100644
+--- a/lib/schema.js
++++ b/lib/schema.js
+@@ -27,7 +27,7 @@ function schema_jsonSchema(name) {
+ 
+   if (!this.__jsonSchema || config.get(FORCE_REBUILD)) {
+     this.__buildingSchema = true;
+-    this.__jsonSchema = __build(name, this);
++    this.__jsonSchema = __build(name, this, !!name);
+     this.__buildingSchema = false;
+     if (this.__jsonSchemaId) {
+       this.__jsonSchema = {
+@@ -49,7 +49,7 @@ function schema_jsonSchema(name) {
+ 
+ schema_jsonSchema.__jsonSchemaIdCounter = 0;
+ 
+-function __build(name, schema) {
++function __build(name, schema, inside) {
+   const paths = Object
+     .keys(schema.paths)
+     .filter(path => !/\.\$\*$/.test(path)); // removing Map.item paths
+@@ -68,9 +68,23 @@ function __build(name, schema) {
+     jss = ensurePath(result, path);
+     sch = schema.paths[path].jsonSchema(jss.prop);
+     jss.cont.properties[jss.prop] = sch;
++    if(jss.prop === '_id') {
++      // remove this inside check to remove `_id` from top level of schema
++            // if(inside) {
++              delete result.properties[jss.prop];
++              // continue;
++            // }
++            delete sch.pattern;
++            sch.__required = true;
++    }
++    if(['createdAt', 'updatedAt'].includes(jss.prop) || sch.type === 'array') {
++          sch.__required = true;
++    }
+     if (sch.__required) {
+       jss.cont.required = jss.cont.required || [];
+       jss.cont.required.push(jss.prop);
++    } else if (sch.type && sch.default === undefined) {
++      sch.nullable = true;
+     }
+     delete sch.__required;
+   }
