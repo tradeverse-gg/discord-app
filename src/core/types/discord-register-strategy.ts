@@ -6,7 +6,7 @@
  * @typedef DiscordRegisterStrategy Register to a specific guild
  */
 export enum DiscordRegisterStrategy {
-    GLOBAL = 'GLOBAL',
-    DEV_GUILD = 'dev_guild',
-    GUILD = 'guild',
+	GLOBAL = 'GLOBAL',
+	DEV_GUILD = 'dev_guild',
+	GUILD = 'guild',
 }

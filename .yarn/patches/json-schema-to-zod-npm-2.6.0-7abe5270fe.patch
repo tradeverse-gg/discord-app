@@ -1,0 +1,74 @@
+diff --git a/dist/esm/jsonSchemaToZod.js b/dist/esm/jsonSchemaToZod.js
+index 8003847e30377cde9a1ce79ddc932482c364d7ef..d3cdfe4306f255b372563e2fc0b3c20e3f88de50 100644
+--- a/dist/esm/jsonSchemaToZod.js
++++ b/dist/esm/jsonSchemaToZod.js
+@@ -1,6 +1,6 @@
+ import { parseSchema } from "./parsers/parseSchema.js";
+ import { expandJsdocs } from "./utils/jsdocs.js";
+-export const jsonSchemaToZod = (schema, { module, name, type, noImport, ...rest } = {}) => {
++export const jsonSchemaToZod = (schema, {  anyTypeCustomCode, module, name, type, noImport, ...rest } = {}) => {
+     if (type && (!name || module !== "esm")) {
+         throw new Error("Option `type` requires `name` to be set and `module` to be `esm`");
+     }
+@@ -8,6 +8,7 @@ export const jsonSchemaToZod = (schema, { module, name, type, noImport, ...rest
+         module,
+         name,
+         path: [],
++        anyTypeCustomCode,
+         seen: new Map(),
+         ...rest,
+     });
+diff --git a/dist/esm/parsers/parseDefault.js b/dist/esm/parsers/parseDefault.js
+index 6d66c55faef4d7668cfa5b61268babba49d13532..5ba17a0a11fdea53f736f044096d0cda6ed3ad16 100644
+--- a/dist/esm/parsers/parseDefault.js
++++ b/dist/esm/parsers/parseDefault.js
+@@ -1,3 +1,9 @@
+-export const parseDefault = (_schema) => {
++export const parseDefault = (_schema, refs) => {
++    const anyTypeCustomCode = refs.anyTypeCustomCode;
++    if (anyTypeCustomCode) {
++        const fieldName = refs.path[refs.path.length - 1];
++        const custom = anyTypeCustomCode[fieldName];
++        if (custom) return custom;
++    }
+     return "z.any()";
+ };
+diff --git a/dist/esm/parsers/parseSchema.js b/dist/esm/parsers/parseSchema.js
+index 92f45d96b4bcaf3852770885508ab76db94a1f69..2d881c8c6d40cfa0c1280f18d168a1350a8ac026 100644
+--- a/dist/esm/parsers/parseSchema.js
++++ b/dist/esm/parsers/parseSchema.js
+@@ -14,9 +14,9 @@ import { parseObject } from "./parseObject.js";
+ import { parseString } from "./parseString.js";
+ import { parseOneOf } from "./parseOneOf.js";
+ import { parseNullable } from "./parseNullable.js";
+-export const parseSchema = (schema, refs = { seen: new Map(), path: [] }, blockMeta) => {
++export const parseSchema = (schema, refs = { seen: new Map(), path: [], anyTypeCustomCode: undefined }, blockMeta) => {
+     if (typeof schema !== "object")
+-        return schema ? "z.any()" : "z.never()";
++        return schema ? "z.any" : "z.never()";
+     if (refs.parserOverride) {
+         const custom = refs.parserOverride(schema, refs);
+         if (typeof custom === "string") {
+@@ -116,7 +116,7 @@ const selectParser = (schema, refs) => {
+         return parseIfThenElse(schema, refs);
+     }
+     else {
+-        return parseDefault(schema);
++        return parseDefault(schema, refs);
+     }
+ };
+ export const its = {
+diff --git a/dist/types/Types.d.ts b/dist/types/Types.d.ts
+index 5e43069c9ff40f190723afbb284e5d4c1bb0367d..3d1743266d13bfd3e30c61983aaa5a48d2ebaa30 100644
+--- a/dist/types/Types.d.ts
++++ b/dist/types/Types.d.ts
+@@ -56,6 +56,9 @@ export type Options = {
+     depth?: number;
+     type?: boolean | string;
+     noImport?: boolean;
++    anyTypeCustomCode?: {
++        [key: string]: string;
++    };
+ };
+ export type Refs = Options & {
+     path: (string | number)[];
