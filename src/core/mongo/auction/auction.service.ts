@@ -7,7 +7,6 @@ import { MongoBaseService } from '../MongoBaseService';
 
 import type { Model } from 'mongoose';
 
-
 @Injectable()
 export class MongoAuctionService extends MongoBaseService<IAuction> {
 	public constructor(

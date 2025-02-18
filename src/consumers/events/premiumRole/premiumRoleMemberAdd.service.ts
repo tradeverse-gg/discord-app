@@ -7,7 +7,6 @@ import { syncPremiumRole } from './syncPremiumRole';
 
 import type { GuildMember } from 'discord.js';
 
-
 @Injectable()
 export class PremiumRoleMemberAddService extends AbstractDefaultMemberAddCommandConsumer {
 	public readonly enabled: boolean = true;

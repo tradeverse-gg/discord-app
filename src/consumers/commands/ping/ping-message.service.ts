@@ -1,14 +1,17 @@
+import process from 'node:process';
+
 import { EmbedBuilder } from '@discordjs/builders';
 import { Injectable } from '@nestjs/common';
-import { ActionRowBuilder, BaseMessageOptions, ButtonBuilder, ButtonStyle, Message } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Message, type BaseMessageOptions } from 'discord.js';
 
-import { ButtonsComponentsProps, ButtonsComponentsService } from '#components/buttons/buttons-component.service';
-import { ComponentPayload } from '#components/components.types';
+import { ButtonsComponentsService, type ButtonsComponentsProps } from '#components/buttons/buttons-component.service';
 import { EmbedComponentType, EmbedsComponentsService } from '#components/embeds/embeds-component.service';
 import { AbstractDefaultMessageCommandConsumer } from '#core/abstract/consumer/message/message.consumer.abstract';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
 
-import { PingAction, PingButtonProps } from './ping.types';
+import { PingAction, type PingButtonProps } from './ping.types';
+
+import type { ComponentPayload } from '#components/components.types';
 
 @Injectable()
 export class PingMessageService extends AbstractDefaultMessageCommandConsumer {
@@ -34,7 +37,7 @@ export class PingMessageService extends AbstractDefaultMessageCommandConsumer {
 	}
 
 	constructor(
-		public readonly discordProducer: DiscordProducerService,
+		public override readonly discordProducer: DiscordProducerService,
 		public readonly embeds: EmbedsComponentsService,
 		public readonly buttons: ButtonsComponentsService,
 	) {
@@ -136,7 +139,7 @@ export class PingMessageService extends AbstractDefaultMessageCommandConsumer {
 		this.createDiscordSystem();
 	}
 
-	public async onInit(): Promise<void> {
+	public override async onInit(): Promise<void> {
 		this.createSystems();
 	}
 }

@@ -1,10 +1,10 @@
 import { CommandInteraction, SlashCommandBuilder, type Interaction } from 'discord.js';
 
-import type { DiscordInteraction } from '#services/discord/discord.service';
-
 import { AbstractDefaultInteractionConsumer } from '#core/abstract/consumer/interaction/interaction.consumer.abstract';
 import { DiscordRegisterStrategy } from '#core/types/discord-register-strategy';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
+
+import type { DiscordInteraction } from '#services/discord/discord.service';
 
 interface AbstractDefaultInteractionConsumerInterface extends DiscordInteraction {
 	onCommandExecuted: (interaction: CommandInteraction) => void | Promise<void>;

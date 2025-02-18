@@ -1,14 +1,17 @@
+/* eslint-disable promise/prefer-await-to-callbacks, promise/prefer-await-to-then */
+import process from 'node:process';
+
 import { Injectable } from '@nestjs/common';
 import {
-	ActivitiesOptions,
 	ActivityType,
 	Client,
 	GatewayIntentBits,
 	Partials,
-	PresenceStatusData,
 	REST,
 	Routes,
 	SlashCommandBuilder,
+	type ActivitiesOptions,
+	type PresenceStatusData,
 } from 'discord.js';
 import { Err, Ok, Result } from 'oxide.ts';
 import { Observable, from, takeUntil } from 'rxjs';
@@ -176,6 +179,7 @@ export class DiscordService extends AbstractDefaultService {
 			}
 		}
 
+		// eslint-disable-next-line unicorn/consistent-function-scoping
 		const onRegistration = (result: Result<boolean, string>, successMsg: string, errorMsg: string) => {
 			if (result.isOk()) this.consoleLogger.log(successMsg);
 			else this.consoleLogger.error(`${errorMsg}: ${result.unwrapErr()}`);
@@ -230,7 +234,7 @@ export class DiscordService extends AbstractDefaultService {
 		super('DiscordService');
 	}
 
-	public onDestroy(): void {
-		this.client.destroy();
+	public override onDestroy(): void {
+		void this.client.destroy();
 	}
 }

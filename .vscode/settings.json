@@ -12,16 +12,5 @@
 		"**/bower_components": true,
 		"**/*.code-search": true,
 		"**/.yarn": true
-	},
-	"eslint.workingDirectories": [
-		{
-			"pattern": "./apps/*"
-		},
-		{
-			"pattern": "./packages/*"
-		},
-		{
-			"pattern": "./src/*"
-		}
-	]
+	}
 }

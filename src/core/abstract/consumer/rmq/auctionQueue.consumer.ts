@@ -52,7 +52,7 @@ export class AuctionQueueConsumer {
 			.setDescription(
 				`**💰 Current Bid:** ${auction.currentBid} ${auction.currency}\n` +
 					`**📈 Increment per bid:** ${auction.increment} ${auction.currency}\n` +
-					`**🔢 Bids done:** ${auction.bidders ? auction.bidders.length : 0}\n\n` +
+					`**🔢 Bids done:** ${auction.bidders.length || 0}\n\n` +
 					`**⏳ Ends in:** <t:${Math.floor(auction.endTime.getTime() / 1_000)}:R>\n\n` +
 					`**👤 Seller:** <@${auction.sellerId}>\n\n` +
 					// { text: `${auction.cardEmbed.title ?? ''} - ${auction.cardEmbed.description ?? ''}` }

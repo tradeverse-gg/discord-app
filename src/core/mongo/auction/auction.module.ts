@@ -5,7 +5,6 @@ import { AuctionSchema, AuctionSchemaName } from '#mongoose';
 
 import { MongoAuctionService } from './auction.service';
 
-
 @Module({
 	imports: [MongooseModule.forFeature([{ name: AuctionSchemaName, schema: AuctionSchema }], 'tradeverse')],
 	exports: [

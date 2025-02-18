@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 
-
-
 import { MongoAuctionModule } from '#mongoose';
 import { AuctionService } from '#producers/auction.service';
 import { DiscordProducerModule } from '#producers/discord/discord-producer.module';

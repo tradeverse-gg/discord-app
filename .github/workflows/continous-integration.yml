@@ -1,0 +1,67 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  Linting:
+    name: Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4.2.2
+      - name: Add problem matcher
+        run: echo "::add-matcher::.github/problemMatchers/eslint.json"
+      - name: Use Node.js v22
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version: 22
+          cache: yarn
+          registry-url: https://registry.npmjs.org/
+      - name: Install Dependencies
+        run: yarn install --immutable
+      - name: Run ESLint
+        run: yarn lint --fix=false
+
+  Test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4.2.2
+      - name: Use Node.js v22
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version: 22
+          cache: yarn
+          registry-url: https://registry.npmjs.org/
+      - name: Install Dependencies
+        run: yarn install --immutable
+      - name: Run Tests
+        run: yarn test --coverage
+
+  Build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4.2.2
+      - name: Use Node.js v22
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version: 22
+          cache: yarn
+          registry-url: https://registry.npmjs.org/
+      - name: Install Dependencies
+        run: yarn install --immutable
+      - name: Compile Source Code
+        run: yarn build
+      - name: Typecheck Source Code
+        run: yarn typecheck

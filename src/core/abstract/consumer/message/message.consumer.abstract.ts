@@ -8,7 +8,6 @@ import { type DiscordProducerEventType, DiscordProducerService } from '#producer
 
 import { AbstractDefaultConsumer } from '../default.consumer.abstract';
 
-
 export abstract class AbstractDefaultMessageCommandConsumer extends AbstractDefaultConsumer {
 	public abstract override readonly name: string;
 	public abstract readonly aliases: string[];

@@ -9,7 +9,6 @@ import type {
 	WarningEmbedComponentsInput,
 } from '#components/embeds/embeds-component.types';
 
-
 export enum EmbedComponentType {
 	Default = 'default',
 	Error = 'error',

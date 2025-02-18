@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { type GuildMember } from 'discord.js';
 
-
 import { AbstractDefaultMemberUpdateCommandConsumer } from '#core/abstract/consumer/memberUpdate/memberUpdate.consumer.abstract';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
 

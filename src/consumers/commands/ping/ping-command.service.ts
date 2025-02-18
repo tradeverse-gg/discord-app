@@ -11,14 +11,14 @@ import {
 	type BaseMessageOptions,
 } from 'discord.js';
 
-import type { ComponentPayload } from '#components/components.types';
-
 import { ButtonsComponentsService, type ButtonsComponentsProps } from '#components/buttons/buttons-component.service';
 import { EmbedComponentType, EmbedsComponentsService } from '#components/embeds/embeds-component.service';
 import { PingAction, type PingButtonProps } from '#consumers/commands/ping/ping.types';
 import { AbstractDefaultInteractionCommandConsumer } from '#core/abstract/consumer/interaction/command.consumer.abstract';
 import { DiscordRegisterStrategy } from '#core/types/discord-register-strategy';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
+
+import type { ComponentPayload } from '#components/components.types';
 
 interface PingableSystem {
 	computePing: (interaction: BaseInteraction) => Promise<number> | number;
@@ -146,7 +146,7 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 	}
 
 	constructor(
-		public discordProducer: DiscordProducerService,
+		public override discordProducer: DiscordProducerService,
 		public embeds: EmbedsComponentsService,
 		public buttons: ButtonsComponentsService,
 	) {
@@ -159,7 +159,7 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 		await interaction.editReply(content);
 	}
 
-	public async onInit(): Promise<void> {
+	public override async onInit(): Promise<void> {
 		this.createSystems();
 	}
 }
