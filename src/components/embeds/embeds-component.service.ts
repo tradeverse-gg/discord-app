@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { EmbedBuilder, HexColorString } from 'discord.js';
+import { EmbedBuilder, type HexColorString } from 'discord.js';
 
-import {
+import { AbstractDefaultService } from '#core/abstract/service/default.service.abstract';
+
+import type {
 	DefaultEmbedComponentsInput,
 	ErrorEmbedComponentsInput,
 	WarningEmbedComponentsInput,
 } from '#components/embeds/embeds-component.types';
-import { AbstractDefaultService } from '#core/abstract/service/default.service.abstract';
+
 
 export enum EmbedComponentType {
 	Default = 'default',
@@ -23,16 +25,13 @@ export type EmbedComponentsInput =
 @Injectable()
 export class EmbedsComponentsService extends AbstractDefaultService {
 	public readonly enabled: boolean = true;
-	public static readonly defaultEmbedColor: HexColorString = '#62b8f3';
-	public static readonly defaultWarningColor: HexColorString = '#f97316';
-	public static readonly defaultErrorEmbedColor: HexColorString = '#ff0000';
 
 	public readonly defaultErrorTitle = 'Error';
 	public readonly defaultErrorDescription = 'An error occurred.';
 	public readonly defaultWarningTitle = 'Warning';
 	public readonly defaultWarningDescription = 'An warning occurred.';
 
-	constructor() {
+	public constructor() {
 		super('EmbedComponentsService');
 	}
 
@@ -71,7 +70,7 @@ export class EmbedsComponentsService extends AbstractDefaultService {
 
 		if (input.description) embed.setDescription(input.description);
 		if (input.title) embed.setTitle(input.title);
-		if (input.color) embed.setColor(input.color);
+		embed.setColor(input.color);
 		if (input.image) embed.setImage(input.image);
 		if (input.thumbnail) embed.setThumbnail(input.thumbnail);
 		if (input.fields) embed.addFields(...input.fields);
@@ -83,4 +82,8 @@ export class EmbedsComponentsService extends AbstractDefaultService {
 	public async embeds(input: EmbedComponentsInput[]): Promise<EmbedBuilder[]> {
 		return Promise.all(input.map((i) => this.embed(i)));
 	}
+
+	public static readonly defaultEmbedColor: HexColorString = '#62b8f3';
+	public static readonly defaultWarningColor: HexColorString = '#f97316';
+	public static readonly defaultErrorEmbedColor: HexColorString = '#ff0000';
 }

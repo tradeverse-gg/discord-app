@@ -31,6 +31,8 @@ export default [
 			],
 			'@typescript-eslint/explicit-member-accessibility': 'off',
 			'@darraghor/nestjs-typed/sort-module-metadata-arrays': 'error',
+			'@typescript-eslint/member-ordering': 'off',
+			'require-atomic-updates': 'off',
 		},
 	},
 	{

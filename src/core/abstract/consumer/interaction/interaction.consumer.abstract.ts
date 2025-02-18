@@ -1,9 +1,9 @@
-import { Events, Interaction } from 'discord.js';
+import { Events, type Interaction } from 'discord.js';
 import { Result } from 'oxide.ts';
 import { takeUntil } from 'rxjs';
 
 import { AbstractDefaultConsumer } from '#core/abstract/consumer/default.consumer.abstract';
-import { DiscordProducerEventType, DiscordProducerService } from '#producers/discord/discord-producer.service';
+import { DiscordProducerService, type DiscordProducerEventType } from '#producers/discord/discord-producer.service';
 
 interface AbstractDefaultInteractionConsumerInterface {
 	onInteraction: (Interaction: Interaction) => void;
@@ -17,22 +17,22 @@ export abstract class AbstractDefaultInteractionConsumer
 
 	constructor(
 		protected readonly discordProducer: DiscordProducerService,
-		protected readonly name: string,
+		protected override readonly name: string,
 	) {
 		super(name);
 	}
 
-	public onModuleInit(): void {
+	public override onModuleInit(): void {
 		if (this.enabled) {
 			this.discordProducer.interaction$
 				.pipe(takeUntil(this.destroy$))
-				.subscribe((result: Result<DiscordProducerEventType<Events.InteractionCreate>, string>) => {
+				.subscribe(async (result: Result<DiscordProducerEventType<Events.InteractionCreate>, string>) => {
 					if (!result.isOk()) this.consoleLogger.error(result.unwrapErr);
 
 					try {
-						this.onInteraction(...result.unwrap().data);
+						await this.onInteraction(...result.unwrap().data);
 					} catch (error) {
-						this.handleFatalError(...result.unwrap().data, error);
+						await this.handleFatalError(...result.unwrap().data, error);
 					}
 				});
 		}

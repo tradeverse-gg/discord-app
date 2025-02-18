@@ -84,9 +84,9 @@ export abstract class AbstractDefaultRolesConsumer
 			const selectedIds = interaction.values;
 
 			if (interaction.customId === 'selfRoles-region' && selectedIds.length > 0) {
-				for (const roleId of regionRoles) {
+				for (const roleId of regionRoles) 
 					if (interaction.member.roles.cache.has(roleId)) await interaction.member.roles.remove(roleId);
-				}
+				
 
 				const newRegionRole = selectedIds[0];
 				await interaction.member.roles.add(newRegionRole);

@@ -1,9 +1,10 @@
-import { CommandInteraction, Interaction, SlashCommandBuilder } from 'discord.js';
+import { CommandInteraction, SlashCommandBuilder, type Interaction } from 'discord.js';
+
+import type { DiscordInteraction } from '#services/discord/discord.service';
 
 import { AbstractDefaultInteractionConsumer } from '#core/abstract/consumer/interaction/interaction.consumer.abstract';
 import { DiscordRegisterStrategy } from '#core/types/discord-register-strategy';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
-import { DiscordInteraction } from '#services/discord/discord.service';
 
 interface AbstractDefaultInteractionConsumerInterface extends DiscordInteraction {
 	onCommandExecuted: (interaction: CommandInteraction) => void | Promise<void>;
@@ -23,21 +24,21 @@ export abstract class AbstractDefaultInteractionCommandConsumer
 			await this.onCommandExecuted(interaction);
 	}
 
-	constructor(
-		protected readonly discordProducer: DiscordProducerService,
-		protected readonly name: string,
+	public constructor(
+		protected override readonly discordProducer: DiscordProducerService,
+		protected override readonly name: string,
 	) {
 		super(discordProducer, name);
 	}
 
-	public onModuleInit(): void {
+	public override onModuleInit(): void {
 		if (this.enabled)
 			this.discordProducer.discordService.registerInternalInteraction(this.registerStrategy, this.slashCommand);
 
 		super.onModuleInit();
 	}
 
-	public onModuleDestroy(): void {
+	public override onModuleDestroy(): void {
 		super.onModuleDestroy();
 	}
 }
