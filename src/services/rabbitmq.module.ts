@@ -11,41 +11,29 @@ export class CommonRabbitMQModule {
 			module: CommonRabbitMQModule,
 			imports: [
 				ConfigModule,
-				RabbitMQModule.forRootAsync({
+				RabbitMQModule.forRootAsync(RabbitMQModule, {
 					imports: [ConfigModule],
 					inject: [ConfigService],
 					useFactory: (configService: ConfigService) => ({
 						exchanges: [
 							{
-								name: 'AUCTION_EXCHANGE',
+								name: 'delayed_auction',
 								type: 'x-delayed-message',
-								options: {
-									arguments: { 'x-delayed-type': 'direct' },
-									durable: true,
-								},
+								options: { arguments: { 'x-delayed-type': 'direct' }, durable: true },
 								createExchangeIfNotExists: true,
 							},
 						],
 						queues: [
 							{
-								name: 'AUCTION_EXCHANGE',
-								options: {
-									durable: true,
-									arguments: {
-										'x-delayed-type': 'direct',
-									},
-								},
+								name: 'delayed_auction',
+								options: { durable: true, arguments: { 'x-delayed-type': 'direct' } },
 								createQueueIfNotExists: true,
-								exchange: 'AUCTION_EXCHANGE',
+								exchange: 'delayed_auction',
 								routingKey: ['delayed-message'],
 							},
 						],
 						uri: configService.getOrThrow('RMQ_URI'),
-						connectionInitOptions: {
-							wait: false,
-							reject: true,
-							timeout: 9_000,
-						},
+						connectionInitOptions: { wait: false, reject: true, timeout: 9_000 },
 						logger,
 						prefetchCount: 1,
 					}),

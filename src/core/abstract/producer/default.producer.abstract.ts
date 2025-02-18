@@ -1,5 +1,6 @@
 import { Result } from 'oxide.ts';
 import { Subject } from 'rxjs';
+
 import { AbstractDefaultService } from '../service/default.service.abstract';
 
 export interface AbstractDefaultProducerInterface<T, S extends Subject<Result<T, string>>> {
@@ -18,9 +19,9 @@ export abstract class AbstractDefaultProducer<T, S extends Subject<Result<T, str
 
 	public onModuleDestroy(): void {
 		this.emit$.complete();
-		if (this.enabled) {
+		if (this.enabled) 
 			this.consoleLogger.log(`${this.name} emit stream destroyed`);
-		}
+		
 		super.onModuleDestroy();
 	}
 }

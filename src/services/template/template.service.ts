@@ -1,11 +1,12 @@
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { Injectable, Logger } from '@nestjs/common';
 import * as ejs from 'ejs';
 import { Err, Ok, Result } from 'oxide.ts';
 import { Observable } from 'rxjs';
 
 import { AbstractDefaultService } from '#core/abstract/service/default.service.abstract';
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
 
 /**
  * @description This service is used to create HTML templates using EJS (Embedded JavaScript).
@@ -36,13 +37,13 @@ export class TemplateService extends AbstractDefaultService {
 	public render<T extends Record<string, any>>(filename: string, data: T): Observable<Result<string, string>> {
 		const options: ejs.Options = {
 			cache: false,
-			filename: filename,
+			filename,
 			root: this.rootPath,
 		};
-		const path: string = `${this.rootPath}/${filename}.ejs`;
+		const path = `${this.rootPath}/${filename}.ejs`;
 		const renderedData = {
 			...data,
-			filename: filename,
+			filename,
 			rootPath: this.rootPath,
 		};
 		return new Observable<Result<string, string>>((observer) => {

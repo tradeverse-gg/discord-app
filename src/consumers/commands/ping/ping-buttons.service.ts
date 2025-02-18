@@ -1,10 +1,12 @@
+import { Injectable } from '@nestjs/common';
+import { ButtonInteraction, CacheType } from 'discord.js';
+
+import { PingCommandService } from './ping-command.service';
+import { PingAction, PingButtonProps } from './ping.types';
+
 import { ComponentPayload } from '#components/components.types';
 import { AbstractDefaultButtonConsumer } from '#core/abstract/consumer/interaction/button.consumer.abstract';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
-import { Injectable } from '@nestjs/common';
-import { ButtonInteraction, CacheType } from 'discord.js';
-import { PingCommandService } from './ping-command.service';
-import { PingAction, PingButtonProps } from './ping.types';
 
 @Injectable()
 export class PingButtonService extends AbstractDefaultButtonConsumer {

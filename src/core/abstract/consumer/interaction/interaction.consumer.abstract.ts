@@ -1,8 +1,9 @@
-import { AbstractDefaultConsumer } from '#core/abstract/consumer/default.consumer.abstract';
-import { DiscordProducerEventType, DiscordProducerService } from '#producers/discord/discord-producer.service';
 import { Events, Interaction } from 'discord.js';
 import { Result } from 'oxide.ts';
 import { takeUntil } from 'rxjs';
+
+import { AbstractDefaultConsumer } from '#core/abstract/consumer/default.consumer.abstract';
+import { DiscordProducerEventType, DiscordProducerService } from '#producers/discord/discord-producer.service';
 
 interface AbstractDefaultInteractionConsumerInterface {
 	onInteraction: (Interaction: Interaction) => void;
@@ -26,9 +27,9 @@ export abstract class AbstractDefaultInteractionConsumer
 			this.discordProducer.interaction$
 				.pipe(takeUntil(this.destroy$))
 				.subscribe((result: Result<DiscordProducerEventType<Events.InteractionCreate>, string>) => {
-					if (!result.isOk()) {
+					if (!result.isOk()) 
 						this.consoleLogger.error(result.unwrapErr);
-					}
+					
 
 					try {
 						this.onInteraction(...result.unwrap().data);

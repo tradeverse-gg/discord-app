@@ -1,15 +1,16 @@
-import { AbstractDefaultProducer } from '#core/abstract/producer/default.producer.abstract';
-import { SafeAny } from '#core/types/any';
-import { DiscordService } from '#services/discord/discord.service';
 import { Injectable } from '@nestjs/common';
-import { ClientEvents, Events } from 'discord.js';
+import { type BaseMessageOptions, type ClientEvents, Embed, EmbedBuilder, Events, TextChannel } from 'discord.js';
 import { Err, Ok, Result } from 'oxide.ts';
 import { Subject, takeUntil } from 'rxjs';
 
-export type DiscordProducerEventType<Event extends keyof ClientEvents> = {
-	event: Event;
+import { AbstractDefaultProducer } from '#core/abstract/producer/default.producer.abstract';
+import { type SafeAny } from '#core/types/any';
+import { DiscordService } from '#services/discord/discord.service';
+
+export interface DiscordProducerEventType<Event extends keyof ClientEvents> {
 	data: [...ClientEvents[Event]];
-};
+	event: Event;
+}
 
 @Injectable()
 export class DiscordProducerService extends AbstractDefaultProducer<
@@ -23,16 +24,57 @@ export class DiscordProducerService extends AbstractDefaultProducer<
 	public readonly interaction$ = new Subject<Result<DiscordProducerEventType<Events.InteractionCreate>, string>>();
 	public readonly error$ = new Subject<Result<DiscordProducerEventType<Events.Error>, string>>();
 
+	public constructor(public discordService: DiscordService) {
+		super('DiscordProducerService');
+		this.enabled = true;
+	}
+
+	public override onInit(): void {
+		this.consoleLogger.log('Initializing Discord producer...');
+		this.listenToEvents();
+		this.listenToSpecificEvents();
+		this.login();
+	}
+
+	public async sendMessage({
+		channelId,
+		content,
+		components,
+		embed,
+	}: {
+		channelId: string;
+		components?: BaseMessageOptions['components'];
+		content: string;
+		embed?: EmbedBuilder | Embed;
+	}): Promise<void> {
+		try {
+			const channel = await this.discordService.client.channels.fetch(channelId);
+			if (!channel?.isTextBased()) {
+				console.warn(`Channel ${channelId} is not text-based.`);
+				return;
+			}
+
+			await (channel as TextChannel).send({ content, embeds: embed ? [embed] : undefined, components });
+		} catch (error) {
+			console.error(`Failed to send message to Discord: ${error}`);
+		}
+	}
+
 	private listenToEvents(): void {
-		Object.values(Events).forEach((event) => {
+		for (const event of Object.values(Events)) {
 			const clientEvent = event as keyof ClientEvents;
 			this.discordService.client.on(clientEvent, (...data) => {
 				if (clientEvent === Events.Error) {
-					this.error$.next(Err(String(data[0])));
+					const error = data[0];
+					const errorMessage =
+						error instanceof Error ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+
+					this.error$.next(Err(errorMessage));
 				}
+
 				this.emit$.next(Ok({ event: clientEvent, data }));
 			});
-		});
+		}
 	}
 
 	private listenToSpecificEvents(): void {
@@ -69,25 +111,12 @@ export class DiscordProducerService extends AbstractDefaultProducer<
 						this.consoleLogger.log('Discord login successful');
 						this.discordService.registerDiscordInteractions();
 						this.discordService.setPresence('online', []);
-					} else {
-						this.error$.next(Err(result.unwrapErr()));
-					}
+					} else this.error$.next(Err(result.unwrapErr()));
 				},
 				error: (error) => {
 					this.consoleLogger.error('Login failed:', error);
 					this.error$.next(Err(error.message));
 				},
 			});
-	}
-	public constructor(public discordService: DiscordService) {
-		super('DiscordProducerService');
-		this.enabled = true;
-	}
-
-	public onInit(): void {
-		this.consoleLogger.log('Initializing Discord producer...');
-		this.listenToEvents();
-		this.listenToSpecificEvents();
-		this.login();
 	}
 }

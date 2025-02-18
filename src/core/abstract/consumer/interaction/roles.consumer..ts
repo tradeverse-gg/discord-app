@@ -1,11 +1,12 @@
+import { ButtonInteraction, Interaction, StringSelectMenuInteraction } from 'discord.js';
+
 import { ComponentPayload } from '#components/components.types';
 import { AbstractDefaultInteractionConsumer } from '#core/abstract/consumer/interaction/interaction.consumer.abstract';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
-import { ButtonInteraction, Interaction, StringSelectMenuInteraction } from 'discord.js';
 
 export interface AbstractDefaultRolesConsumerInterface {
+	onButtonExecution: (interaction: ButtonInteraction, payload: ComponentPayload) => void | Promise<void>;
 	slashCommandName: string;
-	onButtonExecution(interaction: ButtonInteraction, payload: ComponentPayload): void | Promise<void>;
 }
 
 export abstract class AbstractDefaultRolesConsumer
@@ -84,9 +85,9 @@ export abstract class AbstractDefaultRolesConsumer
 
 			if (interaction.customId === 'selfRoles-region' && selectedIds.length > 0) {
 				for (const roleId of regionRoles) {
-					if (interaction.member.roles.cache.has(roleId)) {
+					if (interaction.member.roles.cache.has(roleId)) 
 						await interaction.member.roles.remove(roleId);
-					}
+					
 				}
 
 				const newRegionRole = selectedIds[0];
@@ -120,12 +121,12 @@ export abstract class AbstractDefaultRolesConsumer
 				}
 
 				let content = '';
-				if (addedRoles.length > 0) {
+				if (addedRoles.length > 0) 
 					content += `Added roles: ${addedRoles.join(', ')}\n`;
-				}
-				if (removedRoles.length > 0) {
+				
+				if (removedRoles.length > 0) 
 					content += `Removed roles: ${removedRoles.join(', ')}`;
-				}
+				
 
 				await interaction.reply({
 					content: content || 'No role changes were made.',

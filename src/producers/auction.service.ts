@@ -1,6 +1,7 @@
-import { type DelayedNotificationArgs } from '#core/types/rmq';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { Inject, Injectable } from '@nestjs/common';
+
+import { type DelayedNotificationArgs } from '#core/types/rmq';
 
 @Injectable()
 export class AuctionService {
@@ -12,15 +13,10 @@ export class AuctionService {
 		data: DelayedNotificationArgs[T],
 	) {
 		return this.connection.publish(
-			'AUCTION_EXCHANGE',
+			'delayed_auction',
 			'delayed-message',
 			JSON.stringify({ ...(typeof data === 'string' ? { message: data } : { data }), handlerToken }),
-			{
-				headers: {
-					'x-delay': milliseconds,
-					persistent: true,
-				},
-			},
+			{ headers: { 'x-delay': milliseconds, persistent: true } },
 		);
 	}
 }

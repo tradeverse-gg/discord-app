@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { EmbedBuilder, HexColorString } from 'discord.js';
 
-import { AbstractDefaultService } from '#core/abstract/service/default.service.abstract';
-
 import {
 	DefaultEmbedComponentsInput,
 	ErrorEmbedComponentsInput,
 	WarningEmbedComponentsInput,
 } from '#components/embeds/embeds-component.types';
+import { AbstractDefaultService } from '#core/abstract/service/default.service.abstract';
+
 
 export enum EmbedComponentType {
 	Default = 'default',
 	Error = 'error',
-	Warning = 'warning',
 	Item = 'item',
+	Warning = 'warning'
 }
 
 export type EmbedComponentsInput =
@@ -40,9 +40,9 @@ export class EmbedsComponentsService extends AbstractDefaultService {
 	public embed(input: EmbedComponentsInput): EmbedBuilder {
 		const embed = new EmbedBuilder();
 
-		if (input.author) {
+		if (input.author) 
 			embed.setAuthor(input.author);
-		} else {
+		 else {
 			embed.setAuthor({
 				name: 'Tradeverse',
 			});
@@ -50,31 +50,31 @@ export class EmbedsComponentsService extends AbstractDefaultService {
 
 		switch (input.type) {
 			case EmbedComponentType.Error:
-				if (!input.title) {
+				if (!input.title) 
 					input.title = this.defaultErrorTitle;
-				}
-				if (!input.description) {
+				
+				if (!input.description) 
 					input.description = this.defaultErrorDescription;
-				}
-				if (!input.color) {
+				
+				if (!input.color) 
 					input.color = EmbedsComponentsService.defaultErrorEmbedColor;
-				}
+				
 				break;
 			case EmbedComponentType.Warning:
-				if (!input.title) {
+				if (!input.title) 
 					input.title = this.defaultWarningTitle;
-				}
-				if (!input.description) {
+				
+				if (!input.description) 
 					input.description = this.defaultWarningDescription;
-				}
-				if (!input.color) {
+				
+				if (!input.color) 
 					input.color = EmbedsComponentsService.defaultWarningColor;
-				}
+				
 				break;
 			default:
-				if (!input.color) {
+				if (!input.color) 
 					input.color = EmbedsComponentsService.defaultEmbedColor;
-				}
+				
 				break;
 		}
 

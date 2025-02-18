@@ -16,10 +16,10 @@ import { Observable, from, takeUntil } from 'rxjs';
 import { AbstractDefaultService } from '#core/abstract/service/default.service.abstract';
 import { DiscordRegisterStrategy } from '#core/types/discord-register-strategy';
 
-export type DiscordInteraction = {
+export interface DiscordInteraction {
 	registerStrategy: DiscordRegisterStrategy;
 	slashCommand: SlashCommandBuilder;
-};
+}
 
 /**
  * @description
@@ -105,12 +105,8 @@ export class DiscordService extends AbstractDefaultService {
 				.put(Routes.applicationCommands(this.discordClientId), {
 					body: commands,
 				})
-				.then(() => {
-					return Ok(true);
-				})
-				.catch((error: Error) => {
-					return Err(error.message);
-				}),
+				.then(() => Ok(true))
+				.catch((error: Error) => Err(error.message)),
 		);
 	}
 
@@ -129,12 +125,8 @@ export class DiscordService extends AbstractDefaultService {
 		return from(
 			this.rest
 				.put(Routes.applicationGuildCommands(this.discordClientId, guildId), { body: commands })
-				.then(() => {
-					return Ok(true);
-				})
-				.catch((error: Error) => {
-					return Err(error.message);
-				}),
+				.then(() => Ok(true))
+				.catch((error: Error) => Err(error.message)),
 		);
 	}
 
@@ -170,7 +162,7 @@ export class DiscordService extends AbstractDefaultService {
 		const guildInteractions: SlashCommandBuilder[] = [];
 		const devGuildInteractions: SlashCommandBuilder[] = [];
 
-		this.interactions.forEach((interaction) => {
+		for (const interaction of this.interactions) {
 			switch (interaction.registerStrategy) {
 				case DiscordRegisterStrategy.GLOBAL:
 					globalInteractions.push(interaction.slashCommand);
@@ -182,14 +174,14 @@ export class DiscordService extends AbstractDefaultService {
 					devGuildInteractions.push(interaction.slashCommand);
 					break;
 			}
-		});
+		}
 
 		const onRegistration = (result: Result<boolean, string>, successMsg: string, errorMsg: string) => {
-			if (result.isOk()) {
+			if (result.isOk()) 
 				this.consoleLogger.log(successMsg);
-			} else {
+			 else 
 				this.consoleLogger.error(`${errorMsg}: ${result.unwrapErr()}`);
-			}
+			
 		};
 
 		if (globalInteractions.length > 0) {

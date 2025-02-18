@@ -1,11 +1,12 @@
+import { ButtonInteraction, Interaction } from 'discord.js';
+
 import { ComponentPayload } from '#components/components.types';
 import { AbstractDefaultInteractionConsumer } from '#core/abstract/consumer/interaction/interaction.consumer.abstract';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
-import { ButtonInteraction, Interaction } from 'discord.js';
 
 export interface AbstractDefaultButtonConsumerInterface {
+	onButtonExecution: (interaction: ButtonInteraction, payload: ComponentPayload) => void | Promise<void>;
 	slashCommandName: string;
-	onButtonExecution(interaction: ButtonInteraction, payload: ComponentPayload): void | Promise<void>;
 }
 
 export abstract class AbstractDefaultButtonConsumer

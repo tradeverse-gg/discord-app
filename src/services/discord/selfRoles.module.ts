@@ -1,8 +1,9 @@
+import { Injectable } from '@nestjs/common';
+import { ButtonInteraction, StringSelectMenuInteraction } from 'discord.js';
+
 import { ComponentPayload } from '#components/components.types';
 import { AbstractDefaultRolesConsumer } from '#core/abstract/consumer/interaction/roles.consumer.';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
-import { Injectable } from '@nestjs/common';
-import { ButtonInteraction, StringSelectMenuInteraction } from 'discord.js';
 
 @Injectable()
 export class RolesInteractionService extends AbstractDefaultRolesConsumer {
@@ -12,7 +13,7 @@ export class RolesInteractionService extends AbstractDefaultRolesConsumer {
 		super(discordProducer, 'RolesInteractionService', 'roles');
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	 
 	public async onButtonExecution(interaction: ButtonInteraction, payload: ComponentPayload): Promise<void> {
 		await interaction.deferUpdate();
 	}

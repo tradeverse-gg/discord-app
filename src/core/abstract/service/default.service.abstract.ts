@@ -2,11 +2,11 @@ import { Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { Subject } from 'rxjs';
 
 interface AbstractDefaultServiceInterface {
-	readonly enabled: boolean;
 	readonly consoleLogger: Logger;
 	readonly destroy$: Subject<void>;
-	onInit?(): void;
-	onDestroy?(): void;
+	readonly enabled: boolean;
+	onDestroy?: () => void;
+	onInit?: () => void;
 }
 
 export abstract class AbstractDefaultService implements AbstractDefaultServiceInterface, OnModuleInit, OnModuleDestroy {
@@ -38,12 +38,12 @@ export abstract class AbstractDefaultService implements AbstractDefaultServiceIn
 		this.destroy$.next();
 		this.destroy$.complete();
 
-		if (this.enabled && this.onDestroy) {
+		if (this.enabled && this.onDestroy) 
 			this.onDestroy();
-		}
-		if (this.enabled) {
+		
+		if (this.enabled) 
 			this.consoleLogger.log(`${this.name} destroyed`);
-		}
+		
 	}
 
 	public onInit(): void {
