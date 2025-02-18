@@ -55,6 +55,13 @@
 			"#producers/*": ["./src/producers/*"]
 		}
 	},
-	"include": ["src/**/*", "process-env.d.ts"],
+	"include": [
+		"src/**/*",
+		"tests/**/*",
+		"vitest.config.ts",
+		"vitest.config.e2e.ts",
+		"process-env.d.ts",
+		"eslint.config.js"
+	],
 	"exclude": ["node_modules"]
 }

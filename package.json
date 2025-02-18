@@ -1,9 +1,8 @@
 {
-	"name": "discord-app",
+	"name": "tradeverse",
 	"version": "0.0.1",
 	"type": "module",
-	"description": "",
-	"author": "",
+	"description": "A discord bot for tradeverse server",
 	"private": true,
 	"license": "UNLICENSED",
 	"imports": {
@@ -29,7 +28,7 @@
 		"dev": "nest start --watch",
 		"build": "nest build",
 		"start": "node --enable-source-maps dist/main.js",
-		"lint": "TIMING=1 eslint \"{src,test}/**/*.ts\" --fix",
+		"lint": "TIMING=1 eslint \"{src,tests}/**/*.ts\" --fix",
 		"format": "prettier --write --cache .",
 		"test": "vitest run",
 		"test:watch": "vitest",

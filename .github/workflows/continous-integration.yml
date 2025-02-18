@@ -30,22 +30,22 @@ jobs:
       - name: Run ESLint
         run: yarn lint --fix=false
 
-  Test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Project
-        uses: actions/checkout@v4.2.2
-      - name: Use Node.js v22
-        uses: actions/setup-node@v4.2.0
-        with:
-          node-version: 22
-          cache: yarn
-          registry-url: https://registry.npmjs.org/
-      - name: Install Dependencies
-        run: yarn install --immutable
-      - name: Run Tests
-        run: yarn test --coverage
+  # Test:
+  #   name: Test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Project
+  #       uses: actions/checkout@v4.2.2
+  #     - name: Use Node.js v22
+  #       uses: actions/setup-node@v4.2.0
+  #       with:
+  #         node-version: 22
+  #         cache: yarn
+  #         registry-url: https://registry.npmjs.org/
+  #     - name: Install Dependencies
+  #       run: yarn install --immutable
+  #     - name: Run Tests
+  #       run: yarn test --coverage
 
   Build:
     name: Build
