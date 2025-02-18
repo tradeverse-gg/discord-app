@@ -1,23 +1,24 @@
-import { ActionRowBuilder, ButtonBuilder, RestOrArray } from '@discordjs/builders';
+import { ActionRowBuilder, ButtonBuilder, type RestOrArray } from '@discordjs/builders';
 import { Injectable } from '@nestjs/common';
 import {
-	APIEmbedField,
 	BaseInteraction,
-	BaseMessageOptions,
 	ButtonStyle,
 	CommandInteraction,
 	EmbedBuilder,
 	Message,
 	SlashCommandBuilder,
+	type APIEmbedField,
+	type BaseMessageOptions,
 } from 'discord.js';
 
-import { ButtonsComponentsProps, ButtonsComponentsService } from '#components/buttons/buttons-component.service';
-import { ComponentPayload } from '#components/components.types';
+import { ButtonsComponentsService, type ButtonsComponentsProps } from '#components/buttons/buttons-component.service';
 import { EmbedComponentType, EmbedsComponentsService } from '#components/embeds/embeds-component.service';
-import { PingAction, PingButtonProps } from '#consumers/commands/ping/ping.types';
+import { PingAction, type PingButtonProps } from '#consumers/commands/ping/ping.types';
 import { AbstractDefaultInteractionCommandConsumer } from '#core/abstract/consumer/interaction/command.consumer.abstract';
 import { DiscordRegisterStrategy } from '#core/types/discord-register-strategy';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
+
+import type { ComponentPayload } from '#components/components.types';
 
 interface PingableSystem {
 	computePing: (interaction: BaseInteraction) => Promise<number> | number;
@@ -29,8 +30,9 @@ interface PingableSystem {
 
 @Injectable()
 export class PingCommandService extends AbstractDefaultInteractionCommandConsumer {
-	public readonly name: string = 'ping';
+	public override readonly name: string = 'ping';
 	public readonly enabled: boolean = true;
+
 	public readonly registerStrategy: DiscordRegisterStrategy.GLOBAL = DiscordRegisterStrategy.GLOBAL;
 	public readonly slashCommand: SlashCommandBuilder = new SlashCommandBuilder()
 		.setName('ping')
@@ -43,9 +45,7 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 	get isCached(): boolean {
 		const now = Date.now();
 		const isCached = now - this.lasstCacheTime < this.maxCacheTime;
-		if (!isCached) return true;
-
-		return false;
+		return !isCached;
 	}
 
 	public async getContent(interaction: BaseInteraction): Promise<BaseMessageOptions> {
@@ -146,7 +146,7 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 	}
 
 	constructor(
-		public discordProducer: DiscordProducerService,
+		public override discordProducer: DiscordProducerService,
 		public embeds: EmbedsComponentsService,
 		public buttons: ButtonsComponentsService,
 	) {
@@ -159,7 +159,7 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 		await interaction.editReply(content);
 	}
 
-	public async onInit(): Promise<void> {
+	public override async onInit(): Promise<void> {
 		this.createSystems();
 	}
 }

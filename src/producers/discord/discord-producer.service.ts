@@ -22,6 +22,8 @@ export class DiscordProducerService extends AbstractDefaultProducer<
 	public readonly ready$ = new Subject<Result<DiscordProducerEventType<Events.ClientReady>, string>>();
 	public readonly message$ = new Subject<Result<DiscordProducerEventType<Events.MessageCreate>, string>>();
 	public readonly interaction$ = new Subject<Result<DiscordProducerEventType<Events.InteractionCreate>, string>>();
+	public readonly memberAdd$ = new Subject<Result<DiscordProducerEventType<Events.GuildMemberAdd>, string>>();
+	public readonly memberUpdate$ = new Subject<Result<DiscordProducerEventType<Events.GuildMemberUpdate>, string>>();
 	public readonly error$ = new Subject<Result<DiscordProducerEventType<Events.Error>, string>>();
 
 	public constructor(public discordService: DiscordService) {
@@ -90,6 +92,12 @@ export class DiscordProducerService extends AbstractDefaultProducer<
 						break;
 					case Events.InteractionCreate:
 						this.interaction$.next(Ok(event));
+						break;
+					case Events.GuildMemberAdd:
+						this.memberAdd$.next(Ok(event));
+						break;
+					case Events.GuildMemberUpdate:
+						this.memberUpdate$.next(Ok(event));
 						break;
 					case Events.Error:
 						this.error$.next(Ok(event));

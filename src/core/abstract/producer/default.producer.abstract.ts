@@ -13,11 +13,11 @@ export abstract class AbstractDefaultProducer<T, S extends Subject<Result<T, str
 {
 	public abstract readonly emit$: S;
 
-	constructor(protected readonly name: string) {
+	constructor(protected override readonly name: string) {
 		super(name);
 	}
 
-	public onModuleDestroy(): void {
+	public override onModuleDestroy(): void {
 		this.emit$.complete();
 		if (this.enabled) this.consoleLogger.log(`${this.name} emit stream destroyed`);
 

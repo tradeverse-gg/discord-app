@@ -4,9 +4,9 @@ import { Events, Message } from 'discord.js';
 import { Result } from 'oxide.ts';
 import { takeUntil } from 'rxjs';
 
-import { AbstractDefaultConsumer } from '../default.consumer.abstract';
-
 import { type DiscordProducerEventType, DiscordProducerService } from '#producers/discord/discord-producer.service';
+
+import { AbstractDefaultConsumer } from '../default.consumer.abstract';
 
 export abstract class AbstractDefaultMessageCommandConsumer extends AbstractDefaultConsumer {
 	public abstract override readonly name: string;

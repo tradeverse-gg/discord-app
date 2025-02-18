@@ -1,4 +1,6 @@
-import { Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import process from 'node:process';
+
+import { Logger, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
 import { Subject } from 'rxjs';
 
 interface AbstractDefaultServiceInterface {
@@ -23,7 +25,7 @@ export abstract class AbstractDefaultService implements AbstractDefaultServiceIn
 	}
 
 	constructor(protected readonly name: string) {
-		this.consoleLogger = new Logger(name);
+		this.consoleLogger = new Logger(this.name);
 	}
 
 	public onModuleInit(): void {
@@ -38,7 +40,7 @@ export abstract class AbstractDefaultService implements AbstractDefaultServiceIn
 		this.destroy$.next();
 		this.destroy$.complete();
 
-		if (this.enabled && this.onDestroy) this.onDestroy();
+		if (this.enabled) this.onDestroy();
 
 		if (this.enabled) this.consoleLogger.log(`${this.name} destroyed`);
 	}

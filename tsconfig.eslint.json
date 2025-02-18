@@ -2,7 +2,9 @@
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
 		"emitDecoratorMetadata": true,
-		"noEmit": true
+		"noEmit": true,
+		"allowJs": true,
+		"checkJs": true
 	},
 	"include": ["src", "tests", "vitest.config.ts", "vitest.config.e2e.ts", "process-env.d.ts", "eslint.config.js"],
 	"exclude": ["node_modules", "dist"]

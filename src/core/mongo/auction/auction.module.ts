@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { MongoAuctionService } from './auction.service';
-
 import { AuctionSchema, AuctionSchemaName } from '#mongoose';
+
+import { MongoAuctionService } from './auction.service';
 
 @Module({
 	imports: [MongooseModule.forFeature([{ name: AuctionSchemaName, schema: AuctionSchema }], 'tradeverse')],

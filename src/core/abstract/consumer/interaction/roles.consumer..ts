@@ -1,8 +1,9 @@
-import { ButtonInteraction, Interaction, StringSelectMenuInteraction } from 'discord.js';
+import { ButtonInteraction, StringSelectMenuInteraction, type Interaction } from 'discord.js';
 
-import { ComponentPayload } from '#components/components.types';
 import { AbstractDefaultInteractionConsumer } from '#core/abstract/consumer/interaction/interaction.consumer.abstract';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
+
+import type { ComponentPayload } from '#components/components.types';
 
 export interface AbstractDefaultRolesConsumerInterface {
 	onButtonExecution: (interaction: ButtonInteraction, payload: ComponentPayload) => void | Promise<void>;
@@ -21,29 +22,16 @@ export abstract class AbstractDefaultRolesConsumer
 	}
 
 	constructor(
-		protected readonly discordProducer: DiscordProducerService,
-		protected readonly name: string,
+		protected override readonly discordProducer: DiscordProducerService,
+		protected override readonly name: string,
 		public readonly slashCommandName: string,
 	) {
 		super(discordProducer, name);
 	}
 
-	public onModuleInit(): void {
-		super.onModuleInit();
-	}
-
-	public onModuleDestroy(): void {
-		super.onModuleDestroy();
-	}
-
 	public async handleSelfRoles(
 		interaction: ButtonInteraction<'cached'> | StringSelectMenuInteraction<'cached'>,
 	): Promise<void> {
-		if (!interaction) {
-			this.consoleLogger.log('Interaction not found!');
-			return;
-		}
-
 		const rolesMap = new Map([
 			// Regions
 			['Asia', '1338363578184372306'],
@@ -84,9 +72,8 @@ export abstract class AbstractDefaultRolesConsumer
 			const selectedIds = interaction.values;
 
 			if (interaction.customId === 'selfRoles-region' && selectedIds.length > 0) {
-				for (const roleId of regionRoles) {
+				for (const roleId of regionRoles)
 					if (interaction.member.roles.cache.has(roleId)) await interaction.member.roles.remove(roleId);
-				}
 
 				const newRegionRole = selectedIds[0];
 				await interaction.member.roles.add(newRegionRole);

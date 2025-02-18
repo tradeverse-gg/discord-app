@@ -1,9 +1,10 @@
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
-import { APIMessageComponentEmoji, ButtonStyle, ComponentEmojiResolvable } from 'discord.js';
+import { ButtonStyle, type ComponentEmojiResolvable, type APIMessageComponentEmoji } from 'discord.js';
 
-import { ComponentPayload } from '#components/components.types';
 import { AbstractDefaultService } from '#core/abstract/service/default.service.abstract';
-import { SafeAny } from '#core/types/any';
+
+import type { ComponentPayload } from '#components/components.types';
+import type { SafeAny } from '#core/types/any';
 
 export interface ButtonsComponentsProps<T extends ComponentPayload = ComponentPayload<SafeAny>> {
 	disabled?: boolean;

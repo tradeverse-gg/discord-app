@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { BaseMessageOptions, ButtonInteraction, CacheType } from 'discord.js';
+import { ButtonInteraction, type BaseMessageOptions, type CacheType } from 'discord.js';
 
-import { ComponentPayload } from '#components/components.types';
 import { AbstractDefaultButtonConsumer } from '#core/abstract/consumer/interaction/button.consumer.abstract';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
 
 import { PingMessageService } from './ping-message.service';
-import { PingAction, PingButtonProps } from './ping.types';
+import { PingAction, type PingButtonProps } from './ping.types';
+
+import type { ComponentPayload } from '#components/components.types';
 
 @Injectable()
 export class PingMessageButtonService extends AbstractDefaultButtonConsumer {
 	public readonly enabled = true;
 
 	constructor(
-		public readonly discordProducer: DiscordProducerService,
+		public override readonly discordProducer: DiscordProducerService,
 		public readonly pingMessage: PingMessageService,
 	) {
 		// Match the cmd in the payload

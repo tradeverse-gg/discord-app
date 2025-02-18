@@ -1,8 +1,9 @@
-import { ButtonInteraction, Interaction } from 'discord.js';
+import { ButtonInteraction, type Interaction } from 'discord.js';
 
-import { ComponentPayload } from '#components/components.types';
 import { AbstractDefaultInteractionConsumer } from '#core/abstract/consumer/interaction/interaction.consumer.abstract';
 import { DiscordProducerService } from '#producers/discord/discord-producer.service';
+
+import type { ComponentPayload } from '#components/components.types';
 
 export interface AbstractDefaultButtonConsumerInterface {
 	onButtonExecution: (interaction: ButtonInteraction, payload: ComponentPayload) => void | Promise<void>;
@@ -28,18 +29,10 @@ export abstract class AbstractDefaultButtonConsumer
 	}
 
 	constructor(
-		protected readonly discordProducer: DiscordProducerService,
-		protected readonly name: string,
+		protected override readonly discordProducer: DiscordProducerService,
+		protected override readonly name: string,
 		public readonly slashCommandName: string,
 	) {
 		super(discordProducer, name);
-	}
-
-	public onModuleInit(): void {
-		super.onModuleInit();
-	}
-
-	public onModuleDestroy(): void {
-		super.onModuleDestroy();
 	}
 }
