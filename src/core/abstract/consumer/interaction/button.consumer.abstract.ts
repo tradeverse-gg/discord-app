@@ -14,6 +14,14 @@ export abstract class AbstractDefaultButtonConsumer
 	extends AbstractDefaultInteractionConsumer
 	implements AbstractDefaultButtonConsumerInterface
 {
+	public constructor(
+		protected override readonly discordProducer: DiscordProducerService,
+		protected override readonly name: string,
+		public readonly slashCommandName: string,
+	) {
+		super(discordProducer, name);
+	}
+
 	public abstract onButtonExecution(interaction: ButtonInteraction, payload: ComponentPayload): void | Promise<void>;
 
 	public async onInteraction(interaction: Interaction): Promise<void> {
@@ -26,13 +34,5 @@ export abstract class AbstractDefaultButtonConsumer
 				this.consoleLogger.error(`Error in ${this.name} onInteraction:`, error);
 			}
 		}
-	}
-
-	constructor(
-		protected override readonly discordProducer: DiscordProducerService,
-		protected override readonly name: string,
-		public readonly slashCommandName: string,
-	) {
-		super(discordProducer, name);
 	}
 }

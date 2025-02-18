@@ -21,15 +21,6 @@ export class PingMessageButtonService extends AbstractDefaultButtonConsumer {
 		super(discordProducer, 'pingMessageButtonService', 'ping-message');
 	}
 
-	private async refreshButton(interaction: ButtonInteraction<CacheType>) {
-		await interaction.deferUpdate();
-
-		if (this.pingMessage.isCached) return;
-
-		const content: BaseMessageOptions = await this.pingMessage.getContent(interaction.message);
-		await interaction.message.edit(content);
-	}
-
 	public async onButtonExecution(
 		interaction: ButtonInteraction<CacheType>,
 		payload: ComponentPayload<PingButtonProps>,
@@ -42,5 +33,14 @@ export class PingMessageButtonService extends AbstractDefaultButtonConsumer {
 				await interaction.deferUpdate();
 				break;
 		}
+	}
+
+	private async refreshButton(interaction: ButtonInteraction<CacheType>) {
+		await interaction.deferUpdate();
+
+		if (this.pingMessage.isCached) return;
+
+		const content: BaseMessageOptions = await this.pingMessage.getContent(interaction.message);
+		await interaction.message.edit(content);
 	}
 }
