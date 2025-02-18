@@ -13,7 +13,6 @@ export class RolesInteractionService extends AbstractDefaultRolesConsumer {
 		super(discordProducer, 'RolesInteractionService', 'roles');
 	}
 
-	 
 	public async onButtonExecution(interaction: ButtonInteraction, payload: ComponentPayload): Promise<void> {
 		await interaction.deferUpdate();
 	}

@@ -85,9 +85,7 @@ export abstract class AbstractDefaultRolesConsumer
 
 			if (interaction.customId === 'selfRoles-region' && selectedIds.length > 0) {
 				for (const roleId of regionRoles) {
-					if (interaction.member.roles.cache.has(roleId)) 
-						await interaction.member.roles.remove(roleId);
-					
+					if (interaction.member.roles.cache.has(roleId)) await interaction.member.roles.remove(roleId);
 				}
 
 				const newRegionRole = selectedIds[0];
@@ -121,12 +119,9 @@ export abstract class AbstractDefaultRolesConsumer
 				}
 
 				let content = '';
-				if (addedRoles.length > 0) 
-					content += `Added roles: ${addedRoles.join(', ')}\n`;
-				
-				if (removedRoles.length > 0) 
-					content += `Removed roles: ${removedRoles.join(', ')}`;
-				
+				if (addedRoles.length > 0) content += `Added roles: ${addedRoles.join(', ')}\n`;
+
+				if (removedRoles.length > 0) content += `Removed roles: ${removedRoles.join(', ')}`;
 
 				await interaction.reply({
 					content: content || 'No role changes were made.',

@@ -2,7 +2,6 @@ import { EmbedBuilder } from '@discordjs/builders';
 import { Injectable } from '@nestjs/common';
 import { ActionRowBuilder, BaseMessageOptions, ButtonBuilder, ButtonStyle, Message } from 'discord.js';
 
-
 import { ButtonsComponentsProps, ButtonsComponentsService } from '#components/buttons/buttons-component.service';
 import { ComponentPayload } from '#components/components.types';
 import { EmbedComponentType, EmbedsComponentsService } from '#components/embeds/embeds-component.service';
@@ -75,9 +74,8 @@ export class PingMessageService extends AbstractDefaultMessageCommandConsumer {
 				components: [buttonsRow],
 			};
 		} catch (error) {
-			if (process.env.NODE_ENV !== 'production') 
-				this.consoleLogger.error(error);
-			
+			if (process.env.NODE_ENV !== 'production') this.consoleLogger.error(error);
+
 			return {
 				embeds: [this.embeds.embed({ type: EmbedComponentType.Error })],
 				components: [buttonsRow],

@@ -4,7 +4,7 @@ import { AuctionMessageService } from './auctionMessage.service';
 
 import { AuctionQueueConsumer } from '../../../core/abstract/consumer/rmq/auctionQueue.consumer';
 
-import { MongoAuctionModule } from '#mongoose/auction/auction.module';
+import { MongoAuctionModule } from '#mongoose';
 import { AuctionService } from '#producers/auction.service';
 import { DiscordProducerModule } from '#producers/discord/discord-producer.module';
 

@@ -19,9 +19,8 @@ export abstract class AbstractDefaultInteractionCommandConsumer
 	public abstract onCommandExecuted(interaction: CommandInteraction): void | Promise<void>;
 
 	public async onInteraction(interaction: Interaction): Promise<void> {
-		if (interaction.isCommand() && interaction.commandName === this.slashCommand.name) 
+		if (interaction.isCommand() && interaction.commandName === this.slashCommand.name)
 			await this.onCommandExecuted(interaction);
-		
 	}
 
 	constructor(
@@ -32,9 +31,9 @@ export abstract class AbstractDefaultInteractionCommandConsumer
 	}
 
 	public onModuleInit(): void {
-		if (this.enabled) 
+		if (this.enabled)
 			this.discordProducer.discordService.registerInternalInteraction(this.registerStrategy, this.slashCommand);
-		
+
 		super.onModuleInit();
 	}
 

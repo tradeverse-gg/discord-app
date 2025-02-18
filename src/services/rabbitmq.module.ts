@@ -11,7 +11,7 @@ export class CommonRabbitMQModule {
 			module: CommonRabbitMQModule,
 			imports: [
 				ConfigModule,
-				RabbitMQModule.forRootAsync(RabbitMQModule, {
+				RabbitMQModule.forRootAsync({
 					imports: [ConfigModule],
 					inject: [ConfigService],
 					useFactory: (configService: ConfigService) => ({

@@ -27,9 +27,7 @@ export abstract class AbstractDefaultInteractionConsumer
 			this.discordProducer.interaction$
 				.pipe(takeUntil(this.destroy$))
 				.subscribe((result: Result<DiscordProducerEventType<Events.InteractionCreate>, string>) => {
-					if (!result.isOk()) 
-						this.consoleLogger.error(result.unwrapErr);
-					
+					if (!result.isOk()) this.consoleLogger.error(result.unwrapErr);
 
 					try {
 						this.onInteraction(...result.unwrap().data);

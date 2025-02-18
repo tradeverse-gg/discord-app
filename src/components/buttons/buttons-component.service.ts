@@ -26,9 +26,7 @@ export class ButtonsComponentsService extends AbstractDefaultService {
 		if (props.emoji) button.setEmoji(props.emoji as APIMessageComponentEmoji);
 
 		const payload: string = JSON.stringify(props.payload);
-		if (payload.length > 100) 
-			this.consoleLogger.warn(`Payload is too long: ${payload.length} characters`, payload);
-		
+		if (payload.length > 100) this.consoleLogger.warn(`Payload is too long: ${payload.length} characters`, payload);
 
 		button.setCustomId(payload);
 

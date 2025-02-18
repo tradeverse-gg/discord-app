@@ -38,12 +38,9 @@ export abstract class AbstractDefaultService implements AbstractDefaultServiceIn
 		this.destroy$.next();
 		this.destroy$.complete();
 
-		if (this.enabled && this.onDestroy) 
-			this.onDestroy();
-		
-		if (this.enabled) 
-			this.consoleLogger.log(`${this.name} destroyed`);
-		
+		if (this.enabled && this.onDestroy) this.onDestroy();
+
+		if (this.enabled) this.consoleLogger.log(`${this.name} destroyed`);
 	}
 
 	public onInit(): void {

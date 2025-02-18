@@ -177,11 +177,8 @@ export class DiscordService extends AbstractDefaultService {
 		}
 
 		const onRegistration = (result: Result<boolean, string>, successMsg: string, errorMsg: string) => {
-			if (result.isOk()) 
-				this.consoleLogger.log(successMsg);
-			 else 
-				this.consoleLogger.error(`${errorMsg}: ${result.unwrapErr()}`);
-			
+			if (result.isOk()) this.consoleLogger.log(successMsg);
+			else this.consoleLogger.error(`${errorMsg}: ${result.unwrapErr()}`);
 		};
 
 		if (globalInteractions.length > 0) {

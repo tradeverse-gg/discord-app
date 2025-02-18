@@ -19,9 +19,8 @@ export abstract class AbstractDefaultProducer<T, S extends Subject<Result<T, str
 
 	public onModuleDestroy(): void {
 		this.emit$.complete();
-		if (this.enabled) 
-			this.consoleLogger.log(`${this.name} emit stream destroyed`);
-		
+		if (this.enabled) this.consoleLogger.log(`${this.name} emit stream destroyed`);
+
 		super.onModuleDestroy();
 	}
 }

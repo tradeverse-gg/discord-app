@@ -43,9 +43,8 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 	get isCached(): boolean {
 		const now = Date.now();
 		const isCached = now - this.lasstCacheTime < this.maxCacheTime;
-		if (!isCached) 
-			return true;
-		
+		if (!isCached) return true;
+
 		return false;
 	}
 
@@ -76,9 +75,8 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 
 			return { embeds: [embed], components: [buttons] };
 		} catch (error) {
-			if (this.isDevelopment) 
-				this.consoleLogger.error(error);
-			
+			if (this.isDevelopment) this.consoleLogger.error(error);
+
 			return {
 				embeds: [this.embeds.embed({ type: EmbedComponentType.Error })],
 				components: [buttons],
@@ -94,10 +92,7 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 			deletable = reply.deletable;
 		}
 
-		if (interaction.isButton()) 
-			 
-			deletable = interaction.message.deletable;
-		
+		if (interaction.isButton()) deletable = interaction.message.deletable;
 
 		const buttons: ButtonsComponentsProps<ComponentPayload<PingButtonProps>>[] = [
 			{
@@ -119,9 +114,7 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 	}
 
 	private async computePings(interaction: BaseInteraction): Promise<void> {
-		if (this.isCached) 
-			return;
-		
+		if (this.isCached) return;
 
 		await Promise.all(
 			this.systems.map(async (system) => {
