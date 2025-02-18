@@ -1,5 +1,7 @@
 import { Schema, type InferSchemaType, SchemaTypes } from 'mongoose';
 
+import { createSubSchema } from '#mongoose/util';
+
 export const AuctionSchemaName = 'Auction';
 
 export const AuctionSchema = new Schema(
@@ -14,7 +16,15 @@ export const AuctionSchema = new Schema(
 		startingBid: { type: SchemaTypes.Number },
 		currentBid: { type: SchemaTypes.Number },
 		increment: { type: SchemaTypes.Number },
-		bidders: { type: [{ userId: { type: SchemaTypes.String }, amount: SchemaTypes.Number }], required: false },
+		bidders: {
+			type: [
+				createSubSchema({
+					userId: { type: SchemaTypes.String, required: false },
+					amount: { type: SchemaTypes.Number, required: false },
+				}),
+			],
+			required: false,
+		},
 		status: { type: SchemaTypes.String, enum: ['Active', 'Paused', 'Ended'], default: 'Active' },
 		startTime: { type: SchemaTypes.Date, required: true },
 		endTime: { type: SchemaTypes.Date, required: true },
@@ -22,7 +32,9 @@ export const AuctionSchema = new Schema(
 	{ timestamps: true, versionKey: false },
 );
 
-export type IAuction = InferSchemaType<typeof AuctionSchema>;
+export type IAuction = Omit<InferSchemaType<typeof AuctionSchema>, 'bidders'> & {
+	bidders: { amount?: number | null; userId?: string | null }[];
+};
 export type IAuctionDoc = Omit<IAuction, 'updatedAt'>;
 
 export const customAuctionSchemaZodTypes = {

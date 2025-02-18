@@ -1,14 +1,18 @@
-import { DiscordProducerEventType, DiscordProducerService } from '#producers/discord/discord-producer.service';
+import process from 'node:process';
+
 import { Events, Message } from 'discord.js';
 import { Result } from 'oxide.ts';
 import { takeUntil } from 'rxjs';
+
 import { AbstractDefaultConsumer } from '../default.consumer.abstract';
 
+import { type DiscordProducerEventType, DiscordProducerService } from '#producers/discord/discord-producer.service';
+
 export abstract class AbstractDefaultMessageCommandConsumer extends AbstractDefaultConsumer {
-	public abstract readonly name: string;
+	public abstract override readonly name: string;
 	public abstract readonly aliases: string[];
 	public abstract readonly description: string;
-	protected readonly prefix: string = process.env.DISCORD_COMMAND_PREFIX || '?';
+	protected readonly prefix: string = process.env.DISCORD_COMMAND_PREFIX ?? '?';
 
 	public abstract onMessageExecuted(message: Message, args: string[]): void | Promise<void>;
 
@@ -19,7 +23,7 @@ export abstract class AbstractDefaultMessageCommandConsumer extends AbstractDefa
 		super(serviceName);
 	}
 
-	public onModuleInit(): void {
+	public override onModuleInit(): void {
 		if (this.enabled) {
 			this.discordProducer.message$
 				.pipe(takeUntil(this.destroy$))
@@ -30,16 +34,14 @@ export abstract class AbstractDefaultMessageCommandConsumer extends AbstractDefa
 					}
 
 					const [message] = result.unwrap().data;
-					if (!this.shouldHandleMessage(message)) {
-						return;
-					}
+					if (!this.shouldHandleMessage(message)) return;
 
 					const args: string[] = message.content.slice(this.prefix.length).trim().split(/ +/);
 					const command: string | unknown = args.shift()?.toLowerCase();
 
-					if (command === this.name || command == this.aliases.find((alias) => alias === command)) {
+					if (command === this.name || command === this.aliases.find((alias) => alias === command)) {
 						try {
-							this.onMessageExecuted(message, args);
+							void this.onMessageExecuted(message, args);
 						} catch (error) {
 							this.consoleLogger.error(`Error in ${this.name} onMessage:`, error);
 						}

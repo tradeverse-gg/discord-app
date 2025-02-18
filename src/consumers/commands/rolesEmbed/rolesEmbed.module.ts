@@ -1,6 +1,8 @@
+import { Module } from '@nestjs/common';
+
 import { DiscordProducerModule } from '#producers/discord/discord-producer.module';
 import { RolesInteractionService } from '#services/discord/selfRoles.module';
-import { Module } from '@nestjs/common';
+
 import { RolesEmbedMessageService } from './rolesEmbedMessage.service';
 
 @Module({

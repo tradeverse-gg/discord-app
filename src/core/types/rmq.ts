@@ -3,10 +3,7 @@ export enum DelayedNotificationHandlers {
 }
 
 export interface DelayedNotificationArgs {
-	[DelayedNotificationHandlers.AUCTION_DELAYED_NOTIFICATION]: {
-		auctionId: string;
-		delay: number;
-	};
+	[DelayedNotificationHandlers.AUCTION_DELAYED_NOTIFICATION]: { auctionId: string; delay: number };
 }
 
-export const Delayed_Auction_Queue_Exchange = 'AUCTION_EXCHANGE';
+export const Delayed_Auction_Queue_Exchange = 'delayed_auction';

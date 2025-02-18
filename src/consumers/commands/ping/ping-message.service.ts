@@ -1,14 +1,14 @@
+import { EmbedBuilder } from '@discordjs/builders';
 import { Injectable } from '@nestjs/common';
 import { ActionRowBuilder, BaseMessageOptions, ButtonBuilder, ButtonStyle, Message } from 'discord.js';
 
-import { AbstractDefaultMessageCommandConsumer } from '#core/abstract/consumer/message/message.consumer.abstract';
-import { DiscordProducerService } from '#producers/discord/discord-producer.service';
 
 import { ButtonsComponentsProps, ButtonsComponentsService } from '#components/buttons/buttons-component.service';
 import { ComponentPayload } from '#components/components.types';
 import { EmbedComponentType, EmbedsComponentsService } from '#components/embeds/embeds-component.service';
+import { AbstractDefaultMessageCommandConsumer } from '#core/abstract/consumer/message/message.consumer.abstract';
+import { DiscordProducerService } from '#producers/discord/discord-producer.service';
 
-import { EmbedBuilder } from '@discordjs/builders';
 import { PingAction, PingButtonProps } from './ping.types';
 
 @Injectable()
@@ -19,14 +19,14 @@ export class PingMessageService extends AbstractDefaultMessageCommandConsumer {
 	public readonly enabled: boolean = true;
 
 	public readonly systems: {
-		name: string;
+		computePing: (message: Message) => Promise<number> | number;
 		emoji: (message?: Message) => string | Promise<string>;
 		isAvailable: boolean;
+		name: string;
 		ping: number;
-		computePing: (message: Message) => Promise<number> | number;
 	}[] = [];
 
-	private maxCacheTime = 1000 * 60 * 5; // 5 minutes
+	private maxCacheTime = 1_000 * 60 * 5; // 5 minutes
 	private lastCacheTime = 0;
 
 	public get isCached(): boolean {
@@ -75,9 +75,9 @@ export class PingMessageService extends AbstractDefaultMessageCommandConsumer {
 				components: [buttonsRow],
 			};
 		} catch (error) {
-			if (process.env.NODE_ENV !== 'production') {
+			if (process.env.NODE_ENV !== 'production') 
 				this.consoleLogger.error(error);
-			}
+			
 			return {
 				embeds: [this.embeds.embed({ type: EmbedComponentType.Error })],
 				components: [buttonsRow],
@@ -130,9 +130,7 @@ export class PingMessageService extends AbstractDefaultMessageCommandConsumer {
 			emoji: async () => '💬',
 			isAvailable: true,
 			ping: 0,
-			computePing: async (msg: Message) => {
-				return Date.now() - msg.createdTimestamp;
-			},
+			computePing: async (msg: Message) => Date.now() - msg.createdTimestamp,
 		});
 	}
 

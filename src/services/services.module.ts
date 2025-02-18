@@ -1,9 +1,10 @@
-import { DiscordServiceModule } from '#services/discord/discord.module';
-import { TemplateServiceModule } from '#services/template/template.module';
 import { Module } from '@nestjs/common';
 
+import { DiscordServiceModule } from '#services/discord/discord.module';
+import { TemplateServiceModule } from '#services/template/template.module';
+
 @Module({
-	imports: [TemplateServiceModule, DiscordServiceModule],
-	exports: [TemplateServiceModule, DiscordServiceModule],
+	imports: [DiscordServiceModule, TemplateServiceModule],
+	exports: [DiscordServiceModule, TemplateServiceModule],
 })
 export class ServicesModule {}

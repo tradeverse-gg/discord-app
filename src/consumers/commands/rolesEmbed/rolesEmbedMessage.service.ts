@@ -26,14 +26,13 @@ export class RolesEmbedMessageService extends AbstractDefaultMessageCommandConsu
 	public async onMessageExecuted(message: Message): Promise<void> {
 		if (message.author.id !== '392779025803771904') return;
 
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const [_, action] = message.content.toLowerCase().split(' ');
 
 		const roleChannelId = '1337072146761125908';
 		const ruleChannelId = '1337072146761125908';
 
-		const roleChannel = message.guild?.channels.cache.get(roleChannelId) as TextChannel;
-		const ruleChannel = message.guild?.channels.cache.get(ruleChannelId) as TextChannel;
+		const roleChannel = message.guild?.channels.cache.get(roleChannelId) as TextChannel | undefined;
+		const ruleChannel = message.guild?.channels.cache.get(ruleChannelId) as TextChannel | undefined;
 
 		if (!roleChannel || !ruleChannel) {
 			await message.reply('One or more required channels not found.');
@@ -71,7 +70,7 @@ export class RolesEmbedMessageService extends AbstractDefaultMessageCommandConsu
 	}
 
 	private async createWebhook(channel: TextChannel, webhookName: string): Promise<Webhook> {
-		return await channel.createWebhook({
+		return channel.createWebhook({
 			name: webhookName,
 			// avatar: 'https://cdn.discordapp.com/avatars/853629533855809596/a_4e9b12420d607a91fe65c3f7a035398f.png?size=4096',
 		});
@@ -79,24 +78,19 @@ export class RolesEmbedMessageService extends AbstractDefaultMessageCommandConsu
 
 	private async findOrCreateWebhook(channel: TextChannel, webhookName: string): Promise<Webhook> {
 		const existingWebhook = await this.findExistingWebhook(channel, webhookName);
-		if (existingWebhook) {
-			return existingWebhook;
-		}
-		return await this.createWebhook(channel, webhookName);
+		if (existingWebhook) return existingWebhook;
+
+		return this.createWebhook(channel, webhookName);
 	}
 
 	private async updateEmbeds(roleWebhook: Webhook, ruleWebhook: Webhook): Promise<void> {
-		const ruleMessages = await ruleWebhook.channel.messages.fetch({ limit: 50 });
-		const ruleMessage = ruleMessages.find((m) => m.author.id === ruleWebhook.id);
+		const ruleMessages = await (ruleWebhook.channel as TextChannel).messages.fetch({ limit: 50 });
+		const ruleMessage = ruleMessages.find((msg) => msg.author.id === ruleWebhook.id);
 
-		if (ruleMessage) {
-			await ruleWebhook.editMessage(ruleMessage.id, {
-				embeds: [this.getRuleEmbed()],
-			});
-		}
+		if (ruleMessage) await ruleWebhook.editMessage(ruleMessage.id, { embeds: [this.getRuleEmbed()] });
 
-		const messages = await roleWebhook.channel.messages.fetch({ limit: 50 });
-		const roleMessage = messages.find((m) => m.author.id === roleWebhook.id);
+		const messages = await (ruleWebhook.channel as TextChannel).messages.fetch({ limit: 50 });
+		const roleMessage = messages.find((msg) => msg.author.id === roleWebhook.id);
 
 		if (roleMessage) {
 			await roleWebhook.editMessage(roleMessage.id, {
@@ -107,9 +101,7 @@ export class RolesEmbedMessageService extends AbstractDefaultMessageCommandConsu
 	}
 
 	private async sendEmbeds(ruleWebhook: Webhook, roleWebhook: Webhook): Promise<void> {
-		await ruleWebhook.send({
-			embeds: [this.getRuleEmbed()],
-		});
+		await ruleWebhook.send({ embeds: [this.getRuleEmbed()] });
 
 		await roleWebhook.send({
 			embeds: [this.getRoleEmbed()],

@@ -1,10 +1,3 @@
-import { ButtonsComponentsProps, ButtonsComponentsService } from '#components/buttons/buttons-component.service';
-import { ComponentPayload } from '#components/components.types';
-import { EmbedComponentType, EmbedsComponentsService } from '#components/embeds/embeds-component.service';
-import { PingAction, PingButtonProps } from '#consumers/commands/ping/ping.types';
-import { AbstractDefaultInteractionCommandConsumer } from '#core/abstract/consumer/interaction/command.consumer.abstract';
-import { DiscordRegisterStrategy } from '#core/types/discord-register-strategy';
-import { DiscordProducerService } from '#producers/discord/discord-producer.service';
 import { ActionRowBuilder, ButtonBuilder, RestOrArray } from '@discordjs/builders';
 import { Injectable } from '@nestjs/common';
 import {
@@ -18,13 +11,21 @@ import {
 	SlashCommandBuilder,
 } from 'discord.js';
 
-type PingableSystem = {
-	name: string;
+import { ButtonsComponentsProps, ButtonsComponentsService } from '#components/buttons/buttons-component.service';
+import { ComponentPayload } from '#components/components.types';
+import { EmbedComponentType, EmbedsComponentsService } from '#components/embeds/embeds-component.service';
+import { PingAction, PingButtonProps } from '#consumers/commands/ping/ping.types';
+import { AbstractDefaultInteractionCommandConsumer } from '#core/abstract/consumer/interaction/command.consumer.abstract';
+import { DiscordRegisterStrategy } from '#core/types/discord-register-strategy';
+import { DiscordProducerService } from '#producers/discord/discord-producer.service';
+
+interface PingableSystem {
+	computePing: (interaction: BaseInteraction) => Promise<number> | number;
 	emoji: (interaction?: BaseInteraction) => string | Promise<string>;
 	isAvailable: boolean;
+	name: string;
 	ping: number;
-	computePing: (interaction: BaseInteraction) => Promise<number> | number;
-};
+}
 
 @Injectable()
 export class PingCommandService extends AbstractDefaultInteractionCommandConsumer {
@@ -36,15 +37,15 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 		.setDescription("Check the bot's latency");
 
 	public readonly systems: PingableSystem[] = [];
-	private maxCacheTime: number = 1000 * 60 * 5; //
+	private maxCacheTime: number = 1_000 * 60 * 5; //
 	private lasstCacheTime: number = 0;
 
 	get isCached(): boolean {
 		const now = Date.now();
 		const isCached = now - this.lasstCacheTime < this.maxCacheTime;
-		if (!isCached) {
+		if (!isCached) 
 			return true;
-		}
+		
 		return false;
 	}
 
@@ -75,9 +76,9 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 
 			return { embeds: [embed], components: [buttons] };
 		} catch (error) {
-			if (this.isDevelopment) {
+			if (this.isDevelopment) 
 				this.consoleLogger.error(error);
-			}
+			
 			return {
 				embeds: [this.embeds.embed({ type: EmbedComponentType.Error })],
 				components: [buttons],
@@ -86,17 +87,17 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 	}
 
 	private async computeButtons(interaction: BaseInteraction): Promise<ActionRowBuilder<ButtonBuilder>> {
-		let deletable: boolean = false;
+		let deletable = false;
 
 		if (interaction.isCommand()) {
 			const reply: Message = await interaction.fetchReply();
 			deletable = reply.deletable;
 		}
 
-		if (interaction.isButton()) {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		if (interaction.isButton()) 
+			 
 			deletable = interaction.message.deletable;
-		}
+		
 
 		const buttons: ButtonsComponentsProps<ComponentPayload<PingButtonProps>>[] = [
 			{
@@ -118,9 +119,9 @@ export class PingCommandService extends AbstractDefaultInteractionCommandConsume
 	}
 
 	private async computePings(interaction: BaseInteraction): Promise<void> {
-		if (this.isCached) {
+		if (this.isCached) 
 			return;
-		}
+		
 
 		await Promise.all(
 			this.systems.map(async (system) => {

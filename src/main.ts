@@ -31,7 +31,7 @@ async function bootstrap() {
 	app.useGlobalInterceptors();
 	app.useGlobalPipes(new ZodValidationPipe());
 
-	await app.listen(PORT ?? 3000, '0.0.0.0');
+	await app.listen(PORT ?? 3_000, '0.0.0.0');
 	Logger.log(`Server is running on http://localhost:${PORT}.`);
 }
 

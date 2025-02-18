@@ -3,20 +3,20 @@ import { APIEmbedField, EmbedAuthorOptions, EmbedFooterOptions, HexColorString, 
 import { EmbedComponentType } from './embeds-components.service';
 
 export interface EmbedComponentsInputBase {
-	type: EmbedComponentType;
-	description?: string;
-	title?: string;
-	color?: HexColorString;
 	author?: EmbedAuthorOptions;
-	image?: string;
-	thumbnail?: string;
+	color?: HexColorString;
+	description?: string;
 	fields?: RestOrArray<APIEmbedField>;
 	footer?: EmbedFooterOptions;
+	image?: string;
+	thumbnail?: string;
+	title?: string;
+	type: EmbedComponentType;
 }
 
 export interface DefaultEmbedComponentsInput extends EmbedComponentsInputBase {
-	type: EmbedComponentType.Default;
 	description: string;
+	type: EmbedComponentType.Default;
 }
 
 export interface ErrorEmbedComponentsInput extends EmbedComponentsInputBase {
